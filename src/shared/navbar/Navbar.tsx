@@ -1,12 +1,14 @@
 
+import { ModeToggle } from '@/components/mode-toggler'
 import { Link, NavLink } from 'react-router'
 
 const Navbar = () => {
 
   const navItem = <>
-        <li><NavLink to='/add-article'>All Books</NavLink></li>
-        <li><NavLink to='/all-articles'>Add Book</NavLink></li>
+        <li><NavLink to='/'>All Books</NavLink></li>
+        <li><NavLink to='/add-book'>Add Book</NavLink></li>
         <li><NavLink to='/my-articles'>Borrow Summary</NavLink></li>
+        <li><ModeToggle></ModeToggle></li>
     </>
 
   return (

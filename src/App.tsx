@@ -1,11 +1,15 @@
 
-import { Button } from './components/ui/button'
+import { Outlet } from 'react-router'
+import Navbar from './shared/navbar/Navbar'
 
 function App() {
   
 
   return (
-    <Button className='text-red-400'>Hello</Button>
+    <>
+       <Navbar></Navbar>
+       <Outlet></Outlet>
+    </>
   )
 }
 

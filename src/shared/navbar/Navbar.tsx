@@ -15,7 +15,7 @@ const Navbar = () => {
   </>
 
   return (
-    <div className="navbar px-5 dark:from-black dark:to-gray-700 md:px-10 bg-gradient-to-r from-teal-500 to-blue-500
+    <div className="navbar px-5 dark:from-gray-800 dark:to-gray-700 md:px-10 bg-gradient-to-r from-teal-500 to-blue-500
          text-white items-center flex gap-5 py-5 sticky top-0 z-10 backdrop-blur-md bg-opacity-50">
       <div className="navbar-start">
         <Link to='/'><p className="font-bold text-xl">Library Management App</p></Link>
@@ -38,7 +38,7 @@ const Navbar = () => {
               <span className="sr-only">Toggle mobile menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-[300px] bg-teal-600 pl-3 sm:w-[400px]">
+          <SheetContent side="left" className="w-[300px] dark:from-gray-500 dark:to-gray-800 bg-gradient-to-t from-teal-500 to-teal-800 pl-3 sm:w-[400px]">
             <nav className="flex flex-col gap-4 py-6">
               <Link
                 to="/"

@@ -1,7 +1,8 @@
 import App from "@/App";
+import UpdateBook from "@/components/UpdateBook";
 import AddBook from "@/pages/AddBook";
-import books from "@/pages/Books";
-import { createBrowserRouter } from "react-router";
+import Books from "@/pages/Books";
+import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
     {
@@ -10,11 +11,15 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                Component: books
+                Component: Books
             },
             {
                 path: "add-book",
                 Component: AddBook
+            },
+            {
+                path:`update/:bookId`,
+                Component: UpdateBook
             }
         ]
     }

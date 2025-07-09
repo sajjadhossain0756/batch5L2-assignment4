@@ -1,10 +1,10 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow, } from "@/components/ui/table"
-import UpdateBook from "@/components/UpdateBook"
 import { useDeleteBookMutation, useGetBooksQuery } from "@/redux/api/baseApi"
 import type { Ibooks } from "@/redux/interfaces/books.interface"
 import { toast } from "sonner"
+import { Link } from 'react-router-dom';
 
 
 
@@ -52,7 +52,8 @@ const books = () => {
                             <TableCell className="text-right">{book?.available ? "Available" : "Unavailable"}</TableCell>
                             <TableCell className="text-right flex items-center justify-center">
                                 <div className="mr-2">
-                                    <UpdateBook ></UpdateBook>
+                                    <Link to={`/update/${book._id}`}><Button>Update</Button> </Link>
+                                    
                                 </div>
                                 {/* --- Delete Book data --- */}
                                 <AlertDialog>

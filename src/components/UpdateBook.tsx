@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input"
 import { useForm } from "react-hook-form"
 import { Textarea } from "./ui/textarea"
 import { useGetBookByIdQuery, useUpdateBookMutation } from "@/redux/api/baseApi"
-import type { Ibooks } from "@/redux/interfaces/books.interface"
 import { useParams } from "react-router-dom";
 import React from "react"
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -59,8 +58,8 @@ const UpdateBook = () => {
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: defaultFormValues, // Set default values here
-        values: defaultFormValues, // Use 'values' to update form when defaultFormValues changes (important for async defaults)
+        defaultValues: defaultFormValues, 
+        values: defaultFormValues, 
     });
     React.useEffect(() => {
         if (isBookSuccess && fetchedBookData && fetchedBookData.book) {
@@ -68,30 +67,14 @@ const UpdateBook = () => {
         }
     }, [isBookSuccess, fetchedBookData, form.reset, defaultFormValues]);
 
-
-    // --- CRITICAL DEBUGGING STEP: Trace bookId and fetched data ---
-    console.log('UpdateBookPage Debug:', {
-        bookIdFromParams: bookId,
-        idToFetchForQuery: idToFetch,
-        isBookLoading: isBookLoading,
-        isBookError: isBookError,
-        fetchedBookData: fetchedBookData,
-        isUpdating: isUpdating
-    });
-
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         if (!idToFetch) {
             toast.error("Book ID is missing for update.");
             return;
         }
-        console.log('from try blog line 85', idToFetch,values);
         
         try {
-            const updatedData: Partial<Ibooks> = Object.fromEntries(
-                Object.entries(values).filter(([, value]) => value !== undefined && value !== null)
-            ) as Partial<Ibooks>;
-
-            await updateBookMutation({ _id: idToFetch, data: updatedData }).unwrap();
+            await updateBookMutation({ _id: idToFetch, data: values }).unwrap();
             
             toast.success("Book updated successfully!");
             

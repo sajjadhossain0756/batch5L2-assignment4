@@ -12,7 +12,6 @@ const books = () => {
     const { data, isLoading, isError } = useGetBooksQuery(undefined);
     const [deleteBook, { isLoading: isDeleting }] = useDeleteBookMutation();
 
-    console.log({ data, isLoading, isError })
     if (isLoading) {
         return <p>Loading...</p>
     }
@@ -51,11 +50,15 @@ const books = () => {
                             <TableCell className="text-right">{book?.copies}</TableCell>
                             <TableCell className="text-right">{book?.available ? "Available" : "Unavailable"}</TableCell>
                             <TableCell className="text-right flex items-center justify-center">
+                                {/* --- Update Book Button --- */}
                                 <div className="mr-2">
-                                    <Link to={`/update/${book._id}`}><Button>Update</Button> </Link>
-                                    
+                                    <Link to={`/update/${book._id}`}><Button>Update</Button> </Link>   
                                 </div>
-                                {/* --- Delete Book data --- */}
+                                {/* --- Borrow Book Button --- */}
+                                <div className="mr-2">
+                                    <Link to={`/borrow-books/${book._id}`}><Button>Borrow</Button> </Link>   
+                                </div>
+                                {/* --- Delete Book Button --- */}
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>
                                         <Button

@@ -11,13 +11,16 @@ import * as z from "zod";
 import { toast } from "sonner"
 import { useNavigate } from "react-router-dom";
 
+
+const GENRE_OPTIONS = ["FICTION", "NON_FICTION", "SCIENCE", "HISTORY", "BIOGRAPHY", "FANTASY"];
+
 const formSchema = z.object({
     title: z.string().min(1, { message: "Title is required." }),
     author: z.string().min(1, { message: "Author is required." }),
-    genre: z.enum(["FICTION", "NON_FICTION", "SCIENCE", "HISTORY", "BIOGRAPHY", "FANTASY"], {
+    genre: z.enum(GENRE_OPTIONS as [string, ...string[]], {
         errorMap: (issue, ctx) => {
             if (issue.code === z.ZodIssueCode.invalid_enum_value) {
-                return { message: `Invalid genre. Must be one of: ${ctx.options.join(", ")}` };
+                return { message: `Invalid genre. Must be one of: ${GENRE_OPTIONS.join(", ")}` };
             }
             return { message: ctx.defaultError };
         },
@@ -85,7 +88,7 @@ const UpdateBook = () => {
                 'An unknown error occurred.'}`);
         }
     };
-    if (isBookLoading) {
+    if (isBookLoading || isUpdating) {
         return <p className="p-4 lg:p-20 text-center">Loading book details...</p>;
     }
 

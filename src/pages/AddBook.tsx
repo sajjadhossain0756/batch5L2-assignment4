@@ -1,26 +1,48 @@
 import { Button } from "@/components/ui/button";
-import { Form, FormControl,FormField, FormItem, FormLabel} from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateBookMutation } from "@/redux/api/baseApi";
+import type { Ibooks } from "@/redux/interfaces/books.interface";
 import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 
 
 const AddBook = () => {
-
+    const navigate = useNavigate()
     const form = useForm();
 
-    const [createBook,{data,isLoading,isError}] = useCreateBookMutation();
+    const [createBook, {isLoading, isError }] = useCreateBookMutation();
 
-    const onSubmit = (Data) => {
+    const onSubmit = async (Data: Ibooks) => {
         const bookData = {
             ...Data,
             available: true
         }
-        createBook(bookData);
-        console.log(bookData)
+
+        try {
+            await createBook(bookData).unwrap();
+
+            toast.success("Book created successfully!");
+
+            navigate('/');
+        } catch (error: any) {
+            console.error("Failed to create book:", error);
+            toast.error(`Failed to create book: ${error.data?.message || error.message ||
+                'An unknown error occurred.'}`);
+        }
+        
         form.reset()
+    }
+    if (isLoading) {
+        return <p className="p-4 lg:p-20 text-center">Loading book details...</p>;
+    }
+
+    if (isError) {
+        return <p className="p-4 lg:p-20 text-center text-red-500">Error 
+        loading book is not created.</p>;
     }
 
     return (
@@ -32,11 +54,11 @@ const AddBook = () => {
                     <FormField
                         control={form.control}
                         name="title"
-                        render={({field}) => (
+                        render={({ field }) => (
                             <FormItem className="mb-2">
                                 <FormLabel>Title</FormLabel>
                                 <FormControl>
-                                    <Input type="text"  placeholder="Book Title" {...field} value={field.value || " "}  />
+                                    <Input type="text" placeholder="Book Title" {...field} value={field.value || " "} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -45,11 +67,11 @@ const AddBook = () => {
                     <FormField
                         control={form.control}
                         name="author"
-                        render={({field}) => (
+                        render={({ field }) => (
                             <FormItem className="mb-2">
                                 <FormLabel>Author</FormLabel>
                                 <FormControl>
-                                    <Input type="text"  placeholder="Book Author" {...field} value={field.value || " "}  />
+                                    <Input type="text" placeholder="Book Author" {...field} value={field.value || " "} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -58,11 +80,11 @@ const AddBook = () => {
                     <FormField
                         control={form.control}
                         name="genre"
-                        render={({field}) => (
+                        render={({ field }) => (
                             <FormItem className="mb-2">
                                 <FormLabel>Genre</FormLabel>
                                 <FormControl>
-                                    <Input type="text"  placeholder="Book Genre" {...field} value={field.value || " "}  />
+                                    <Input type="text" placeholder="Book Genre" {...field} value={field.value || " "} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -71,11 +93,11 @@ const AddBook = () => {
                     <FormField
                         control={form.control}
                         name="isbn"
-                        render={({field}) => (
+                        render={({ field }) => (
                             <FormItem className="mb-2">
                                 <FormLabel>ISBN</FormLabel>
                                 <FormControl>
-                                    <Input type="text"  placeholder="Book ISBN" {...field} value={field.value || " "}  />
+                                    <Input type="text" placeholder="Book ISBN" {...field} value={field.value || " "} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -84,11 +106,11 @@ const AddBook = () => {
                     <FormField
                         control={form.control}
                         name="copies"
-                        render={({field}) => (
+                        render={({ field }) => (
                             <FormItem className="mb-2">
                                 <FormLabel>Copies</FormLabel>
                                 <FormControl>
-                                    <Input type="number"  placeholder="Book copies" {...field} value={field.value || " "}  />
+                                    <Input type="number" placeholder="Book copies" {...field} value={field.value || " "} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -97,11 +119,11 @@ const AddBook = () => {
                     <FormField
                         control={form.control}
                         name="description"
-                        render={({field}) => (
+                        render={({ field }) => (
                             <FormItem className="mb-2">
                                 <FormLabel>Description</FormLabel>
                                 <FormControl>
-                                    <Textarea   placeholder="Book description" {...field} value={field.value || " "}  />
+                                    <Textarea placeholder="Book description" {...field} value={field.value || " "} />
                                 </FormControl>
                             </FormItem>
                         )}

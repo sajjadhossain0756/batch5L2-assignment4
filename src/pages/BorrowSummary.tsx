@@ -1,9 +1,10 @@
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useGetBorrowBooksQuery } from "@/redux/api/baseApi";
+import type { IBorrowBookSummary } from "@/redux/interfaces/borrowBook.interface";
 
 
 const BorrowSummary = () => {
-  const { data:borrowBook, isLoading, isError } = useGetBorrowBooksQuery(undefined);
+  const { data:borrowBook, isLoading} = useGetBorrowBooksQuery(undefined);
   console.log(borrowBook)
   if (isLoading) {
     return <p>Loading...</p>
@@ -21,7 +22,7 @@ const BorrowSummary = () => {
           </TableRow>
         </TableHeader>
         <TableBody >
-          {!isLoading && borrowBook?.data?.map((borrowBook) => (
+          {!isLoading && borrowBook?.data?.map((borrowBook: IBorrowBookSummary) => (
             
             <TableRow key={borrowBook?.book?.isbn} >
               <TableCell className="font-medium">{borrowBook?.book?.title}</TableCell>

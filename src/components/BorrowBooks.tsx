@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
 import { useBorrowBooksMutation } from "@/redux/api/baseApi";
 import { useForm } from "react-hook-form"
@@ -13,6 +13,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
+import type { IBorrowBooks } from "@/redux/interfaces/borrowBook.interface";
 
 
 const BorrowBooks = () => {
@@ -20,9 +21,9 @@ const BorrowBooks = () => {
     const { bookId } = useParams();
     const navigate = useNavigate();
 
-    const [borrowBook, { data, isLoading, isError }] = useBorrowBooksMutation()
+    const [borrowBook, {isLoading, isError }] = useBorrowBooksMutation()
 
-    const onSubmit = async (Data) => {
+    const onSubmit = async (Data: IBorrowBooks) => {
         if (!bookId) {
             toast.error("Book ID is missing for borrow.");
             return;
@@ -46,6 +47,14 @@ const BorrowBooks = () => {
         form.reset()
     }
 
+    if (isLoading) {
+        return <p className="p-4 lg:p-20 text-center">Loading book details...</p>;
+    }
+
+    if (isError) {
+        return <p className="p-4 lg:p-20 text-center text-red-500">Error
+            loading book or book not found.</p>;
+    }
     return (
         <div className="px-4 lg:px-40">
             <h2 className="text-center text-3xl font-bold py-4 ">Borrow A Book</h2>

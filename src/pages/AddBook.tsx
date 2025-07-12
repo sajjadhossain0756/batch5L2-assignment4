@@ -3,7 +3,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateBookMutation } from "@/redux/api/baseApi";
-import type { Ibooks } from "@/redux/interfaces/books.interface";
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -47,10 +46,6 @@ const AddBook = () => {
     });
 
     const onSubmit = async (Data: z.infer<typeof addBookFormSchema>) => {
-        const bookData = {
-            ...Data,
-            available: true
-        }
 
         try {
             

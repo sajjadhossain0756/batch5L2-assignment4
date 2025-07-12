@@ -1,39 +1,52 @@
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
 import { useBorrowBooksMutation } from "@/redux/api/baseApi";
 import { useForm } from "react-hook-form"
-import { Calendar } from "@/components/ui/calendar"; import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
+import { Calendar } from "@/components/ui/calendar"; import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover"
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useNavigate, useParams } from "react-router-dom";
+import * as z from "zod"
 import { toast } from "sonner";
-import type { IBorrowBooks } from "@/redux/interfaces/borrowBook.interface";
+// import type { IBorrowBooks } from "@/redux/interfaces/borrowBook.interface";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 
+const borrowFormSchema = z.object({
+    quantity: z.coerce.number().min(1, { message: "Quantity must be at least 1." }),
+    dueDate: z.date({
+        required_error: "A due date is required.",
+        invalid_type_error: "Invalid date format.",
+    }),
+});
 const BorrowBooks = () => {
-    const form = useForm();
     const { bookId } = useParams();
     const navigate = useNavigate();
 
-    const [borrowBook, {isLoading, isError }] = useBorrowBooksMutation()
+    const [borrowBook, { isLoading:isBorrowing, isError }] = useBorrowBooksMutation()
+    console.log(borrowBook)
 
-    const onSubmit = async (Data: IBorrowBooks) => {
+    const form = useForm<z.infer<typeof borrowFormSchema>>({
+        resolver: zodResolver(borrowFormSchema),
+        defaultValues: {
+            quantity: 1,
+        },
+    });
+    const onSubmit = async (Data: z.infer<typeof borrowFormSchema>) => {
         if (!bookId) {
             toast.error("Book ID is missing for borrow.");
             return;
         }
-        const borrowData = {
-            ...Data,
-            book: bookId
-        }
+        const formattedDueDate = format(Data.dueDate, "yyyy-MM-dd");
+        const borrowPayload = {
+            book: bookId, 
+            quantity: Data.quantity,
+            dueDate: formattedDueDate, 
+        };
         try {
-            await borrowBook(borrowData).unwrap();
+            await borrowBook(borrowPayload).unwrap();
 
             toast.success("Book Borrowed successfully!");
 
@@ -43,11 +56,11 @@ const BorrowBooks = () => {
             toast.error(`Failed to Borrow book: ${error.data?.message || error.message ||
                 'An unknown error occurred.'}`);
         }
-        console.log(borrowData)
+        console.log(borrowPayload)
         form.reset()
     }
 
-    if (isLoading) {
+    if (isBorrowing) {
         return <p className="p-4 lg:p-20 text-center">Loading book details...</p>;
     }
 
@@ -68,8 +81,9 @@ const BorrowBooks = () => {
                             <FormItem className="mb-2">
                                 <FormLabel>Quantity</FormLabel>
                                 <FormControl>
-                                    <Input type="text" placeholder="Book Quantity" {...field} value={field.value || " "} />
+                                    <Input type="number" placeholder="Book Quantity" {...field} />
                                 </FormControl>
+                                <FormMessage /> 
                             </FormItem>
                         )}
                     />
@@ -109,11 +123,11 @@ const BorrowBooks = () => {
                                     </PopoverContent>
                                 </Popover>
 
-
+                                <FormMessage /> 
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className="my-2">Submit</Button>
+                    <Button type="submit" className="my-2"> {isBorrowing ? "Submitting..." : "Submit"}</Button>
                 </form>
             </Form>
         </div>

@@ -57,11 +57,11 @@ const books = () => {
                                 <TableCell className="text-right flex items-center justify-center">
                                     {/* --- Update Book Button --- */}
                                     <div className="mr-2">
-                                        <Link to={`/update/${book._id}`}><Button>Update</Button> </Link>
+                                        <Link to={`/edit-book/${book._id}`}><Button>Update</Button> </Link>
                                     </div>
                                     {/* --- Borrow Book Button --- */}
                                     <div className="mr-2">
-                                        <Link to={`/borrow-books/${book._id}`}><Button>Borrow</Button> </Link>
+                                        <Link to={`/borrow/${book._id}`}><Button>Borrow</Button> </Link>
                                     </div>
                                     {/* --- Delete Book Button --- */}
                                     <AlertDialog>
@@ -133,11 +133,11 @@ const books = () => {
                     {/* card footer */}
                     <CardFooter className="flex gap-2">
                         <div className="mr-2">
-                            <Link to={`/update/${book._id}`}><Button>Update</Button> </Link>
+                            <Link to={`/edit-book/${book._id}`}><Button>Update</Button> </Link>
                         </div>
                         {/* --- Borrow Book Button --- */}
                         <div className="mr-2">
-                            <Link to={`/borrow-books/${book._id}`}><Button>Borrow</Button> </Link>
+                            <Link to={`/borrow/${book._id}`}><Button>Borrow</Button> </Link>
                         </div>
                         {/* --- Delete Book Button --- */}
                         <AlertDialog>

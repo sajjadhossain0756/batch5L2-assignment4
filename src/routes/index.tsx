@@ -16,11 +16,11 @@ const router = createBrowserRouter([
                 Component: Books
             },
             {
-                path: "add-book",
+                path: "create-book",
                 Component: AddBook
             },
             {
-                path:`update/:bookId`,
+                path:`edit-book/:bookId`,
                 Component: UpdateBook
             },
             {
@@ -28,7 +28,7 @@ const router = createBrowserRouter([
                 Component: BorrowSummary
             },
             {
-                path:`borrow-books/:bookId`,
+                path:`borrow/:bookId`,
                 Component: BorrowBooks
             }
         ]

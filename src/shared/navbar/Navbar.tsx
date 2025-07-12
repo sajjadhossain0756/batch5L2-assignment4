@@ -9,7 +9,7 @@ const Navbar = () => {
 
   const navItem = <>
     <li><NavLink to='/'>All Books</NavLink></li>
-    <li><NavLink to='/add-book'>Add Book</NavLink></li>
+    <li><NavLink to='/create-book'>Add Book</NavLink></li>
     <li><NavLink to='/borrow-summary'>Borrow Summary</NavLink></li>
     <li><ModeToggle></ModeToggle></li>
   </>
@@ -47,7 +47,7 @@ const Navbar = () => {
                 All Books
               </Link>
               <Link
-                to="/add-book"
+                to="/create-book"
                 className="text-lg font-medium hover:text-primary"
               >
                 Add Book

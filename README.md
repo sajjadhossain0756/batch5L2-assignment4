@@ -4,6 +4,9 @@
 
 This is a full-stack web application designed to manage a collection of books, allowing users to perform CRUD (Create, Read, Update, Delete) operations on books and also to simulate borrowing them. The application is built with a React frontend using Redux Toolkit Query for API interactions and a Node.js/Express backend with MongoDB for data persistence.
 
+## Project live link:
+* https://batch5-l2-assignment4-lt23.vercel.app/
+
 ## ✨ Features
 
 * Book Listing: View a comprehensive list of all available books.
@@ -47,5 +50,5 @@ Follow these steps to get the project up and running on your local machine.
 
 ### 1. Clone the Repository
 ```bash
-git clone <your-repo-url>
-cd <your-project-folder>
+git clone https://github.com/sajjadhossain0756/batch5L2-assignment4.git
+cd batch5L2-assignment4

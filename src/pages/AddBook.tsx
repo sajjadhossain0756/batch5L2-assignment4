@@ -1,48 +1,76 @@
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateBookMutation } from "@/redux/api/baseApi";
 import type { Ibooks } from "@/redux/interfaces/books.interface";
 import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-
+const addBookFormSchema = z.object({
+    title: z.string().min(1, { message: "Title is required." }),
+    author: z.string().min(1, { message: "Author is required." }),
+    genre: z.enum(["FICTION", "NON_FICTION", "SCIENCE", "HISTORY", "BIOGRAPHY", "FANTASY"], {
+        errorMap: (issue, ctx) => {
+            if (issue.code === z.ZodIssueCode.invalid_enum_value) {
+                const validOptions = ["FICTION", "NON_FICTION", "SCIENCE", "HISTORY", "BIOGRAPHY", "FANTASY"].join(", ");
+                return { message: `Invalid genre. Must be one of: ${validOptions}` };
+            }
+            return { message: ctx.defaultError };
+        },
+    }),
+    isbn: z.string().min(1, { message: "ISBN is required." }),
+    copies: z.coerce.number().min(0, { message: "Copies must be a positive number." }),
+    description: z.string().optional(),
+    available: z.boolean().optional(),
+});
 
 const AddBook = () => {
     const navigate = useNavigate()
-    const form = useForm();
 
-    const [createBook, {isLoading, isError }] = useCreateBookMutation();
+    const [createBook, { isLoading, isError }] = useCreateBookMutation();
 
-    const onSubmit = async (Data: Ibooks) => {
+    const form = useForm<z.infer<typeof addBookFormSchema>>({
+        resolver: zodResolver(addBookFormSchema),
+        defaultValues: {
+            title: "",
+            author: "",
+            genre: "FICTION",
+            isbn: "",
+            copies: 1,
+            description: "",
+            available: true,
+        },
+    });
+
+    const onSubmit = async (Data: z.infer<typeof addBookFormSchema>) => {
         const bookData = {
             ...Data,
             available: true
         }
 
         try {
-            await createBook(bookData).unwrap();
+            
+            await createBook(Data).unwrap();
 
-            toast.success("Book created successfully!");
-
-            navigate('/');
+            toast.success("Book added successfully!");
+            form.reset(); 
+            navigate('/')
         } catch (error: any) {
-            console.error("Failed to create book:", error);
-            toast.error(`Failed to create book: ${error.data?.message || error.message ||
-                'An unknown error occurred.'}`);
+            console.error("Failed to add book:", error);
+            toast.error(`Failed to add book: ${error.data?.message || error.message || 'An unknown error occurred.'}`);
         }
-        
-        form.reset()
     }
     if (isLoading) {
         return <p className="p-4 lg:p-20 text-center">Loading book details...</p>;
     }
 
     if (isError) {
-        return <p className="p-4 lg:p-20 text-center text-red-500">Error 
-        loading book is not created.</p>;
+        return <p className="p-4 lg:p-20 text-center text-red-500">Error
+            loading book is not created.</p>;
     }
 
     return (
@@ -60,6 +88,7 @@ const AddBook = () => {
                                 <FormControl>
                                     <Input type="text" placeholder="Book Title" {...field} value={field.value || " "} />
                                 </FormControl>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -73,6 +102,7 @@ const AddBook = () => {
                                 <FormControl>
                                     <Input type="text" placeholder="Book Author" {...field} value={field.value || " "} />
                                 </FormControl>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -86,6 +116,7 @@ const AddBook = () => {
                                 <FormControl>
                                     <Input type="text" placeholder="Book Genre" {...field} value={field.value || " "} />
                                 </FormControl>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -99,6 +130,7 @@ const AddBook = () => {
                                 <FormControl>
                                     <Input type="text" placeholder="Book ISBN" {...field} value={field.value || " "} />
                                 </FormControl>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -112,6 +144,7 @@ const AddBook = () => {
                                 <FormControl>
                                     <Input type="number" placeholder="Book copies" {...field} value={field.value || " "} />
                                 </FormControl>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -125,6 +158,7 @@ const AddBook = () => {
                                 <FormControl>
                                     <Textarea placeholder="Book description" {...field} value={field.value || " "} />
                                 </FormControl>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
